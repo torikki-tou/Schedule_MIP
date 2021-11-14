@@ -1,0 +1,5 @@
+.idea/
+__pecache__/
+venv/
+__pycache__/config.cpython-39.pyc
+__pycache__/parsing_tools.cpython-39.pyc
