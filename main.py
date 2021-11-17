@@ -1,12 +1,34 @@
 import telebot as tb
+from flask import Flask, request
+from flask_sslify import SSLify
 import parsing_tools
-from config import TOKEN
+import config
 
 
-bot = tb.TeleBot(TOKEN)
+bot = tb.TeleBot(config.TOKEN, threaded=False)
 
-base_keyboard = tb.types.ReplyKeyboardMarkup(resize_keyboard=True)
-base_keyboard.row(tb.types.KeyboardButton('На сегодня'), tb.types.KeyboardButton('На завтра'), tb.types.KeyboardButton('На неделю'))
+app = Flask(__name__)
+sslify = SSLify(app)
+
+bot.remove_webhook()
+bot.set_webhook(url=config.WEBHOOK_URL)
+
+
+@app.route('/' + config.SECRET, methods=['POST'])
+def webhook():
+    update = tb.types.Update.de_json(request.stream.read().decode('utf-8'))
+    bot.process_new_updates([update])
+    return 'ok', 200
+
+
+def homepage_keyboard() -> tb.types.ReplyKeyboardMarkup:
+    base_keyboard = tb.types.ReplyKeyboardMarkup(resize_keyboard=True)
+    base_keyboard.row(
+        tb.types.KeyboardButton('На сегодня'),
+        tb.types.KeyboardButton('На завтра'),
+        tb.types.KeyboardButton('На неделю')
+    )
+    return base_keyboard
 
 
 @bot.message_handler(commands=['start'])
@@ -52,8 +74,3 @@ def main_handler(message):
             'Прости, я не понимаю твоё сообщение :(',
             reply_markup=base_keyboard
         )
-
-
-if __name__ == '__main__':
-    print('Bot started')
-    bot.infinity_polling()

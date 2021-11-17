@@ -4,6 +4,9 @@ TOKEN = os.environ.get('TOKEN')
 
 URL = 'https://clients6.google.com/calendar/v3/calendars/c_537r1a5d5tl0titv5e1e7qgsbs@group.calendar.google.com/events'
 
+SECRET = os.environ.get('SECRET')
+WEBHOOK_URL = os.environ.get('WEBHOOK_URL') + SECRET
+
 HEADERS = {
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
                   '(KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 OPR/77.0.4054.203'
