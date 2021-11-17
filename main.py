@@ -39,7 +39,7 @@ def start(message):
         'Привет! Используй кнопки, чтобы получать расписание, когда тебе оно понадобится. '
         'А ещё я сам присылаю расписание на завтра каждый день в 20:30, кроме субботы. '
         'Потому что в субботу я присылаю расписание на всю следующую неделю!',
-        reply_markup=base_keyboard
+        reply_markup=homepage_keyboard()
     )
 
 
@@ -52,25 +52,25 @@ def main_handler(message):
             message.chat.id,
             parsing_tools.today(),
             parse_mode='MarkdownV2',
-            reply_markup=base_keyboard
+            reply_markup=homepage_keyboard()
         )
     elif message.text == 'На завтра':
         bot.send_message(
             message.chat.id,
             parsing_tools.next_day(),
             parse_mode='MarkdownV2',
-            reply_markup=base_keyboard
+            reply_markup=homepage_keyboard()
         )
     elif message.text == 'На неделю':
         bot.send_message(
             message.chat.id,
             parsing_tools.next_week(),
             parse_mode='MarkdownV2',
-            reply_markup=base_keyboard
+            reply_markup=homepage_keyboard()
         )
     else:
         bot.send_message(
             message.chat.id,
             'Прости, я не понимаю твоё сообщение :(',
-            reply_markup=base_keyboard
+            reply_markup=homepage_keyboard()
         )

@@ -35,7 +35,7 @@ def lecture_format(lecture) -> str:
     start_time = time_format('start')
     end_time = time_format('end')
     duration = f'{start_time} - {end_time}'
-    return f'__{lecture_name}__\n_{location} \u2014 {teacher} \u2014 {duration}_\n'
+    return f'*{lecture_name}*\n_{location} \u2014 {teacher} \u2014 {duration}_\n\n'
 
 
 def date_format(lecture: dict) -> str:
@@ -44,7 +44,7 @@ def date_format(lecture: dict) -> str:
         '%Y-%m-%d'
     )
 
-    return f'\n\n*{config.weekdays[date.weekday()]}, {date.day} {config.months[date.month]}*\n'
+    return f'\n\n*__{config.weekdays[date.weekday()]}, {date.day} {config.months[date.month]}__*\n'
 
 
 def today() -> str:
@@ -103,7 +103,7 @@ def next_day(notification: bool = False) -> str:
         if notification:
             response += '\nСейчас уже позже 20:00, поэтому расписание меняться больше не должно'
         else:
-            response += '\nРасписание на завтра может меняться до 20:00 сегодняшнего дня!'
+            response += 'Расписание на завтра может меняться до 20:00 сегодняшнего дня!'
     else:
         response = '*Поздравляю! Завтра у тебя нет ни одной пары!*\n\n' \
                    'Однако расписание на каждый день может меняться до 20:00 предыдущего дня, поэтому будь внимателен!'
