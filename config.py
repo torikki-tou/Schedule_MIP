@@ -1,4 +1,5 @@
 import os
+from enum import Enum
 
 TOKEN = os.environ.get('TOKEN')
 
@@ -21,8 +22,22 @@ PARAMS = {
     'sanitizeHtml': 'true',
     # 'timeMin': '2021-11-08T00:00:00+03:00',
     # 'timeMax': '2021-11-09T00:00:00+03:00',
-    'key': 'AIzaSyBNlYH01_9Hc5S1J9vuFmu2nUqBZJNAXxs'
+    # 'key': ''
 }
+
+DB_PARAMS = {
+    'host': os.environ.get('DB_HOST'),
+    'user': os.environ.get('DB_USER'),
+    'password': os.environ.get('DB_PASSWORD'),
+    'port': os.environ.get('DB_PORT'),
+    'database': os.environ.get('DB_NAME'),
+}
+
+
+class Status(Enum):
+    S_START = 0
+    S_GROUP = 1
+
 
 weekdays = {
     0: 'Понедельник',
