@@ -167,13 +167,18 @@ def group_status(message):
 
     # Проверка существования выбранной группы в базе
     if not dbworker.group_exists(message.text):
+
+        # Получение полного списка групп
+        all_groups = dbworker.get_all_groups()
+
         bot.send_message(
             message.chat.id,
             '[\u0000](https://telegra.ph/Kak-dobavit-svoyu-gruppu-v-bota-11-18)' +
             parsing_tools.markdown_helper(
                 'Я пока не могу присылать расписание для этой группы :('
-                '\n\nВозможно ты просто неправильно написал(а) название группы, '
-                'либо эту группу нужно добавить в список поддерживаемых, вот как это сделать:'),
+                '\nВозможно, ты просто неправильно написал(а) ее название. '
+                f'\n\nПоддерживаются: {", ".join(all_groups)}'
+                '\n\nЕсли твоя группа ещё не поддерживается, то вот гайд как её добавить:'),
             parse_mode='MarkdownV2',
             reply_markup=homepage_keyboard(False))
         return

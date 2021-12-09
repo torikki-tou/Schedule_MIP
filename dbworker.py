@@ -78,3 +78,9 @@ def get_group_key(cursor, group: str) -> str:
 def group_exists(cursor, group: str) -> bool:
     cursor.execute("SELECT id FROM uni_groups WHERE id='{}'".format(group))
     return cursor.fetchone() is not None
+
+
+@connection
+def get_all_groups(cursor) -> list:
+    cursor.execute("SELECT id FROM uni_groups")
+    return list(row['id'] for row in cursor.fetchall())
