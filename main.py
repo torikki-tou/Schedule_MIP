@@ -22,21 +22,32 @@ bot = tb.TeleBot(config.TOKEN, threaded=False)
 #     return 'ok', 200
 
 
-def homepage_keyboard(permission: bool = True) -> tb.types.ReplyKeyboardMarkup:
-    """"""
-    base_keyboard = tb.types.ReplyKeyboardMarkup(resize_keyboard=True)
-    if permission:
-        base_keyboard.row(
+def setup_keyboard(pk: int) -> tb.types.ReplyKeyboardMarkup:
+    """Собирает клавиатуру в соответствии со статусом пользователя"""
+    keyboard = tb.types.ReplyKeyboardMarkup(resize_keyboard=True)
+    status = dbworker.get_status(pk)
+    got_group = dbworker.get_group(pk) or None
+    signed_up = dbworker.is_signed_up(pk)
+    if status == config.Status.S_START.value and got_group:
+        keyboard.row(
             tb.types.KeyboardButton('На сегодня'),
             tb.types.KeyboardButton('На завтра'),
             tb.types.KeyboardButton('На неделю')
         )
-    base_keyboard.row(
+        keyboard.row(
+            tb.types.KeyboardButton('Подписаться на рассылку' if not signed_up else 'Отписаться от рассылки'),
+            tb.types.KeyboardButton('Изменить группу')
+        )
+    if status == config.Status.S_GROUP.value and got_group:
+        keyboard.row(
+            tb.types.KeyboardButton('На главную')
+        )
+    keyboard.row(
         tb.types.KeyboardButton('Помощь'),
         tb.types.KeyboardButton('О проекте'),
         tb.types.KeyboardButton('Поддержать')
     )
-    return base_keyboard
+    return keyboard
 
 
 @bot.message_handler(commands=['start'])
