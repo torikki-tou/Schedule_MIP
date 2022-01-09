@@ -179,7 +179,9 @@ def start_status(message):
         dbworker.sign_up_or_off(message.chat.id, True)
         bot.send_message(
             message.chat.id,
-            'Статус изменен',
+            'Поздравляю, ты подписался на рассылку расписания\!'
+            '\n\nТеперь ты каждый вечер будешь получать расписание на завтрашний день, '
+            'а по субботам — на всю следующую неделю',
             parse_mode='MarkdownV2',
             reply_markup=setup_keyboard(message.chat.id)
         )
@@ -187,7 +189,7 @@ def start_status(message):
         dbworker.sign_up_or_off(message.chat.id, False)
         bot.send_message(
             message.chat.id,
-            'Статус изменен',
+            'Подписка на рассылку отключена',
             parse_mode='MarkdownV2',
             reply_markup=setup_keyboard(message.chat.id)
         )
@@ -195,7 +197,7 @@ def start_status(message):
         dbworker.set_status(pk=message.chat.id, status=config.Status.S_GROUP.value)
         bot.send_message(
             message.chat.id,
-            'Введи название группы',
+            'Теперь введи название группы',
             parse_mode='MarkdownV2',
             reply_markup=setup_keyboard(message.chat.id)
         )
