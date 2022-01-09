@@ -75,17 +75,27 @@ def start(message):
 
 
 @bot.message_handler(
-    func=lambda message: dbworker.get_status(pk=message.chat.id) is None
+    func=lambda message:
+    dbworker.get_status(pk=message.chat.id) is None or dbworker.get_group(pk=message.chat.id) is None
 )
 def status_none(message):
     """Проверка наличия пользователя в базе"""
     bot.send_chat_action(message.chat.id, 'typing')
 
-    bot.send_message(
-        message.chat.id,
-        'Бот получил крупное обновление, чтобы продолжить им пользоваться, пожалуйста, введите /start ещё раз',
-        reply_markup=tb.types.ReplyKeyboardRemove()
-    )
+    if not dbworker.get_status(pk=message.chat.id):
+        bot.send_message(
+            message.chat.id,
+            'Бот получил крупное обновление, чтобы продолжить им пользоваться, пожалуйста, введите /start ещё раз',
+            reply_markup=tb.types.ReplyKeyboardRemove()
+        )
+
+    if not dbworker.get_group(pk=message.chat.id):
+        dbworker.set_status(pk=message.chat.id, status=config.Status.S_GROUP.value)
+        bot.send_message(
+            message.chat.id,
+            'Для продолжения необходимо ввести номер группы!',
+            reply_markup=setup_keyboard(message.chat.id)
+        )
 
 
 @bot.message_handler(
