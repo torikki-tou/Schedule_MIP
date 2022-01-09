@@ -58,7 +58,6 @@ def start(message):
     response = 'Привет! Используй кнопки, чтобы получать расписание, когда тебе оно понадобится. ' \
                'А ещё я сам присылаю расписание на завтра каждый день в 20:30, кроме субботы. ' \
                'Потому что в субботу я присылаю расписание на всю следующую неделю! '
-    got_group = True
 
     # Создание нового пользователя
     dbworker.new_user(pk=message.chat.id, username=message.from_user.username)
@@ -67,12 +66,11 @@ def start(message):
     if not dbworker.get_group(pk=message.chat.id):
         dbworker.set_status(pk=message.chat.id, status=config.Status.S_GROUP.value)
         response += '\n\nЕдинственное, что от тебя потребуется — номер твоей группы'
-        got_group = False
 
     bot.send_message(
         message.chat.id,
         response,
-        reply_markup=homepage_keyboard(permission=got_group)
+        reply_markup=setup_keyboard(message.chat.id)
     )
 
 
@@ -104,14 +102,14 @@ def utils(message):
             'Если у тебя возникли какие либо сложности, вопросы или предложения по функционалу бота, '
             'то напиши @torikki',
             parse_mode='MarkdownV2',
-            reply_markup=homepage_keyboard(got_group)
+            reply_markup=setup_keyboard(message.chat.id)
         )
     elif message.text == 'О проекте':
         bot.send_message(
             message.chat.id,
             '[\u0000](https://telegra.ph/O-proekte-11-18)Немного об этом боте и обо мне',
             parse_mode='MarkdownV2',
-            reply_markup=homepage_keyboard(got_group)
+            reply_markup=setup_keyboard(message.chat.id)
         )
     elif message.text == 'Поддержать':
         bot.send_message(
@@ -121,7 +119,7 @@ def utils(message):
                 'Пользователей пока немного, поэтому бот работает на бесплатном хостинге, '
                 'но вы всё равно можете скинуть мне копеечку за старания'),
             parse_mode='MarkdownV2',
-            reply_markup=homepage_keyboard(got_group)
+            reply_markup=setup_keyboard(message.chat.id)
         )
 
 
@@ -140,7 +138,7 @@ def start_status(message):
                 group_key=dbworker.get_group_key(group=dbworker.get_group(message.chat.id))
             ),
             parse_mode='MarkdownV2',
-            reply_markup=homepage_keyboard()
+            reply_markup=setup_keyboard(message.chat.id)
         )
     elif message.text == 'На завтра':
         bot.send_message(
@@ -149,7 +147,7 @@ def start_status(message):
                 group_key=dbworker.get_group_key(group=dbworker.get_group(message.chat.id))
             ),
             parse_mode='MarkdownV2',
-            reply_markup=homepage_keyboard()
+            reply_markup=setup_keyboard(message.chat.id)
         )
     elif message.text == 'На неделю':
         bot.send_message(
@@ -158,13 +156,13 @@ def start_status(message):
                 group_key=dbworker.get_group_key(group=dbworker.get_group(message.chat.id))
             ),
             parse_mode='MarkdownV2',
-            reply_markup=homepage_keyboard()
+            reply_markup=setup_keyboard(message.chat.id)
         )
     else:
         bot.send_message(
             message.chat.id,
             'Прости, я не понимаю твоё сообщение :(',
-            reply_markup=homepage_keyboard()
+            reply_markup=setup_keyboard(message.chat.id)
         )
 
 
@@ -191,7 +189,7 @@ def group_status(message):
                 f'\n\nПоддерживаются: {", ".join(all_groups)}'
                 '\n\nЕсли твоя группа ещё не поддерживается, то вот гайд как её добавить:'),
             parse_mode='MarkdownV2',
-            reply_markup=homepage_keyboard(False))
+            reply_markup=setup_keyboard(message.chat.id))
         return
 
     # Присвоение выбранной группы пользователю, переход в обычный режим
@@ -201,7 +199,7 @@ def group_status(message):
     bot.send_message(
         message.chat.id,
         f'Отлично, теперь я знаю, что ты из группы {message.text}, и смогу присылать тебе расписание',
-        reply_markup=homepage_keyboard())
+        reply_markup=setup_keyboard(message.chat.id))
 
 
 if __name__ == '__main__':
