@@ -92,6 +92,9 @@ def next_day(group_key: str) -> str:
     tomorrow = dt.date.today() + dt.timedelta(days=1)
     end_day = tomorrow + dt.timedelta(days=1)
 
+    # Проверка времени, чтобы узнать может ли ещё поменяться расписание
+    can_change = False if dt.datetime.now().hour >= 17 else True
+
     # Запрос и получение списка лекций в виде словаря
     data = requests.get(
         url=config.URL,
@@ -105,9 +108,13 @@ def next_day(group_key: str) -> str:
 
     # Проверка наличия лекций
     if not data:
-        return markdown_helper(
-            '*Поздравляю! Завтра у тебя нет ни одной пары!*\n\n'
-            'Однако расписание на каждый день может меняться до 20:00 предыдущего дня, поэтому будь внимателен!')
+        response = '*Поздравляю! Завтра у тебя нет ни одной пары!*'
+        if can_change:
+            response += '\n\nОднако расписание на каждый день может меняться до 20:00 предыдущего дня, ' \
+                        'поэтому будь внимателен!'
+        else:
+            response += '\n\nСейчас уже позже 20:00, поэтому расписание меняться больше не должно'
+        return markdown_helper(response)
 
     # Сортировка, подготовка к оформлению в строку
     sorted_data = sorted(
@@ -121,7 +128,7 @@ def next_day(group_key: str) -> str:
         response += lecture_format(_class)
 
     # Проверка времени, чтобы узнать может ли ещё поменяться расписание
-    if dt.datetime.now().hour >= 17:
+    if not can_change:
         response += '\nСейчас уже позже 20:00, поэтому расписание меняться больше не должно'
     else:
         response += 'Расписание на завтра может меняться до 20:00 сегодняшнего дня!'
