@@ -175,6 +175,30 @@ def start_status(message):
             parse_mode='MarkdownV2',
             reply_markup=setup_keyboard(message.chat.id)
         )
+    elif message.text == 'Подписаться на рассылку':
+        dbworker.sign_up_or_off(message.chat.id, True)
+        bot.send_message(
+            message.chat.id,
+            'Статус изменен',
+            parse_mode='MarkdownV2',
+            reply_markup=setup_keyboard(message.chat.id)
+        )
+    elif message.text == 'Отписаться от рассылки':
+        dbworker.sign_up_or_off(message.chat.id, False)
+        bot.send_message(
+            message.chat.id,
+            'Статус изменен',
+            parse_mode='MarkdownV2',
+            reply_markup=setup_keyboard(message.chat.id)
+        )
+    elif message.text == 'Изменить группу':
+        dbworker.set_status(pk=message.chat.id, status=config.Status.S_GROUP.value)
+        bot.send_message(
+            message.chat.id,
+            'Введи название группы',
+            parse_mode='MarkdownV2',
+            reply_markup=setup_keyboard(message.chat.id)
+        )
     else:
         bot.send_message(
             message.chat.id,
