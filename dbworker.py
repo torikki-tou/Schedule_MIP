@@ -94,6 +94,11 @@ def is_signed_up(cursor, pk: int) -> bool:
 
 
 @connection
+def sign_up_or_off(cursor, pk: int, sign_status: bool):
+    cursor.execute("UPDATE users SET signed_up={} WHERE id={}".format(sign_status, pk))
+
+
+@connection
 def get_all_signed(cursor) -> list:
     cursor.execute("SELECT id FROM users WHERE signed_up=1")
     return list(row['id'] for row in cursor.fetchall())
