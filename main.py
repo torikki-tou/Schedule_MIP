@@ -104,7 +104,6 @@ def status_none(message):
 def utils(message):
     """Обработка вспомогательных команд, доступных в любом режиме"""
     bot.send_chat_action(message.chat.id, 'typing')
-    got_group = True if dbworker.get_group(message.chat.id) else False
 
     if message.text == 'Помощь':
         bot.send_message(
