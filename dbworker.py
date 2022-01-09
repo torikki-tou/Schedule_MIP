@@ -29,7 +29,7 @@ def connection(function):
 
 
 @connection
-def new_user(cursor, pk, username):
+def new_user(cursor, pk: int, username: str):
     try:
         cursor.execute("INSERT INTO users (id, username, status) VALUES ({}, '{}', {})".format(
             pk, username,
@@ -42,7 +42,7 @@ def new_user(cursor, pk, username):
 
 
 @connection
-def get_status(cursor, pk):
+def get_status(cursor, pk: int):
     cursor.execute("SELECT status FROM users WHERE id={}".format(pk))
     result = cursor.fetchone()
     if result:
@@ -50,7 +50,7 @@ def get_status(cursor, pk):
 
 
 @connection
-def set_status(cursor, pk, status):
+def set_status(cursor, pk: int, status: int):
     cursor.execute("UPDATE users SET status={} WHERE id={}".format(status, pk))
 
 
