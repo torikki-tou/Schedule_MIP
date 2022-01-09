@@ -2,6 +2,8 @@ import requests
 import datetime as dt
 import config
 
+timezone = dt.timezone(dt.timedelta(hours=3), 'МСК')
+
 
 def markdown_helper(row_string: str) -> str:
     """Добавляет слеши перед символами, чтобы разметка телеграма работала корректно"""
@@ -54,7 +56,7 @@ def date_format(lecture: dict) -> str:
 def today(group_key: str) -> str:
     """Расписание на сегодня для конкретной группы"""
     # Сегодняшняя дата и следующий день для параметров запроса
-    _today = dt.date.today()
+    _today = dt.datetime.now(timezone).date()
     end_day = _today + dt.timedelta(days=1)
 
     # Запрос и получение списка лекций в виде словаря
@@ -89,11 +91,11 @@ def today(group_key: str) -> str:
 def next_day(group_key: str) -> str:
     """Расписание на неделю для конкретной группы"""
     # Завтрашняя дата и следующий день для параметров запроса
-    tomorrow = dt.date.today() + dt.timedelta(days=1)
+    tomorrow = dt.datetime.now(timezone).date() + dt.timedelta(days=1)
     end_day = tomorrow + dt.timedelta(days=1)
 
     # Проверка времени, чтобы узнать может ли ещё поменяться расписание
-    can_change = False if dt.datetime.now().hour >= 17 else True
+    can_change = False if dt.datetime.now(timezone).hour >= 20 else True
 
     # Запрос и получение списка лекций в виде словаря
     data = requests.get(
@@ -139,7 +141,7 @@ def next_day(group_key: str) -> str:
 def next_week(group_key: str) -> str:
     """Расписание на неделю для конкретной группы"""
     # Завтрашняя дата и дата спустя для параметров запроса
-    tomorrow = dt.date.today() + dt.timedelta(days=1)
+    tomorrow = dt.datetime.now(timezone).date() + dt.timedelta(days=1)
     end_day = tomorrow + dt.timedelta(days=7)
 
     # Запрос и получение списка лекций в виде словаря
