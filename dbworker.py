@@ -84,3 +84,16 @@ def group_exists(cursor, group: str) -> bool:
 def get_all_groups(cursor) -> list:
     cursor.execute("SELECT id FROM uni_groups")
     return list(row['id'] for row in cursor.fetchall())
+
+
+@connection
+def is_signed_up(cursor, pk: int) -> bool:
+    cursor.execute("SELECT signed_up FROM users WHERE id={}".format(pk))
+    result = cursor.fetchone()
+    return bool(result['signed_up'])
+
+
+@connection
+def get_all_signed(cursor) -> list:
+    cursor.execute("SELECT id FROM users WHERE signed_up=1")
+    return list(row['id'] for row in cursor.fetchall())
