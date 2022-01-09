@@ -99,7 +99,7 @@ def status_none(message):
 
 
 @bot.message_handler(
-    func=lambda message: message.text in ('Помощь', 'О проекте', 'Поддержать')
+    func=lambda message: message.text in ('Помощь', 'О проекте', 'Поддержать', 'На главную')
 )
 def utils(message):
     """Обработка вспомогательных команд, доступных в любом режиме"""
@@ -127,6 +127,14 @@ def utils(message):
             parsing_tools.markdown_helper(
                 'Пользователей пока немного, поэтому бот работает на бесплатном хостинге, '
                 'но вы всё равно можете скинуть мне копеечку за старания'),
+            parse_mode='MarkdownV2',
+            reply_markup=setup_keyboard(message.chat.id)
+        )
+    elif message.text == 'На главную':
+        dbworker.set_status(pk=message.chat.id, status=config.Status.S_START.value)
+        bot.send_message(
+            message.chat.id,
+            'Отмена',
             parse_mode='MarkdownV2',
             reply_markup=setup_keyboard(message.chat.id)
         )
